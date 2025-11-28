@@ -7,10 +7,10 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const links = [
-    { href: "#education", label: "Education" },
-    { href: "#work", label: "Work" },
-    { href: "#entertainment", label: "Entertainment" },
-    { href: "#about", label: "About" },
+    { href: "#education", label: "التعليم" },
+    { href: "#work", label: "العمل" },
+    { href: "#entertainment", label: "الترفيه" },
+    { href: "#about", label: "عن المنصة" },
   ];
 
   return (
@@ -34,7 +34,7 @@ export function Navbar() {
             </a>
           ))}
           <button className="px-6 py-2 bg-primary/10 border border-primary/50 text-primary font-display text-xs uppercase tracking-widest hover:bg-primary hover:text-black transition-all duration-300">
-            Connect Wallet
+            ربط المحفظة
           </button>
         </div>
 
@@ -65,7 +65,7 @@ export function Navbar() {
             </a>
           ))}
           <button className="w-full py-3 bg-primary text-black font-bold font-display uppercase tracking-widest">
-            Connect Wallet
+            ربط المحفظة
           </button>
         </motion.div>
       )}
