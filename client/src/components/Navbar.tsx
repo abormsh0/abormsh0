@@ -1,10 +1,21 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, User as UserIcon } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const [, setLocation] = useLocation();
 
   const links = [
     { href: "#education", label: "التعليم" },
@@ -33,9 +44,40 @@ export function Navbar() {
               {link.label}
             </a>
           ))}
-          <button className="px-6 py-2 bg-primary/10 border border-primary/50 text-primary font-display text-xs uppercase tracking-widest hover:bg-primary hover:text-black transition-all duration-300">
-            ربط المحفظة
-          </button>
+          
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8 border border-white/10">
+                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuItem className="flex items-center justify-between">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user.email}
+                    </p>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => logout()} className="text-red-500 focus:text-red-500 cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>تسجيل الخروج</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button 
+              onClick={() => setLocation("/auth")}
+              className="px-6 py-2 bg-primary/10 border border-primary/50 text-primary font-display text-xs uppercase tracking-widest hover:bg-primary hover:text-black transition-all duration-300"
+            >
+              تسجيل الدخول
+            </Button>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -64,9 +106,41 @@ export function Navbar() {
               {link.label}
             </a>
           ))}
-          <button className="w-full py-3 bg-primary text-black font-bold font-display uppercase tracking-widest">
-            ربط المحفظة
-          </button>
+          
+          {user ? (
+            <div className="border-t border-white/10 pt-4 mt-2">
+              <div className="flex items-center gap-3 mb-4">
+                <Avatar className="h-10 w-10 border border-white/10">
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-white font-medium">{user.name}</p>
+                  <p className="text-sm text-gray-500">{user.email}</p>
+                </div>
+              </div>
+              <Button 
+                variant="destructive" 
+                className="w-full" 
+                onClick={() => {
+                  logout();
+                  setIsOpen(false);
+                }}
+              >
+                تسجيل الخروج
+              </Button>
+            </div>
+          ) : (
+            <Button 
+              onClick={() => {
+                setLocation("/auth");
+                setIsOpen(false);
+              }}
+              className="w-full py-3 bg-primary text-black font-bold font-display uppercase tracking-widest"
+            >
+              تسجيل الدخول
+            </Button>
+          )}
         </motion.div>
       )}
     </nav>
